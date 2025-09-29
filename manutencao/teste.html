@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Cadastro de Veículos</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #6441A5, #2a73ff);
+      min-height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      margin: 50px auto;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 28px;
+      text-align: center;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 25px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      color: #333;
+      font-size: 14px;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input:focus, select:focus {
+      border-color: #6441A5;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #6441A5, #2a73ff);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: opacity 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+    }
+
+    .btn-danger {
+      background: #dc3545;
+      width: auto;
+      padding: 8px 15px;
+      font-size: 14px;
+      margin: 0 5px;
+    }
+
+    .btn-edit {
+      background: #ffc107;
+      width: auto;
+      padding: 8px 15px;
+      font-size: 14px;
+      margin: 0 5px;
+    }
+
+    .links {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .links a {
+      color: #2a73ff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    .message {
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .header {
+      background: linear-gradient(90deg, #6441A5, #2a73ff);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      border-radius: 15px 15px 0 0;
+      margin: -40px -40px 30px -40px;
+    }
+
+    .header h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .header p {
+      margin: 5px 0 0 0;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .vehicle-list {
+      margin-top: 20px;
+    }
+
+    .vehicle-item {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .vehicle-info {
+      flex: 1;
+    }
+
+    .vehicle-info h3 {
+      color: #333;
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .vehicle-info p {
+      color: #666;
+      font-size: 14px;
+      margin: 2px 0;
+    }
+
+    .vehicle-actions {
+      display: flex;
+      gap: 5px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+
+    .empty-state p {
+      font-size: 16px;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .nav-buttons button {
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Página de Login -->
+  <div class="page active" id="loginPage">
+    <div class="container">
+      <h1>🚗 Sistema de Veículos</h1>
+      <p class="subtitle">Faça login para continuar</p>
+      
+      <div id="loginMessage"></div>
+      
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Email:</label>
+          <input type="email" id="loginEmail" required>
+        </div>
+        <div class="form-group">
+          <label>Senha:</label>
+          <input type="password" id="loginPassword" required>
+        </div>
+        <button type="submit">Entrar</button>
+      </form>
+      
+      <div class="links">
+        <a onclick="showPage('registerPage')">Não tem conta? Cadastre-se</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Página de Cadastro -->
+  <div class="page" id="registerPage">
+    <div class="container">
+      <h1>Criar Conta</h1>
+      <p class="subtitle">Preencha os dados para se cadastrar</p>
+      
+      <div id="registerMessage"></div>
+      
+      <form id="registerForm">
+        <div class="form-group">
+          <label>Nome Completo:</label>
+          <input type="text" id="registerName" required>
+        </div>
+        <div class="form-group">
+          <label>Email:</label>
+          <input type="email" id="registerEmail" required>
+        </div>
+        <div class="form-group">
+          <label>Senha:</label>
+          <input type="password" id="registerPassword" required minlength="6">
+        </div>
+        <div class="form-group">
+          <label>Confirmar Senha:</label>
+          <input type="password" id="registerConfirmPassword" required>
+        </div>
+        <button type="submit">Criar Conta</button>
+      </form>
+      
+      <div class="links">
+        <a onclick="showPage('loginPage')">Já tem conta? Faça login</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Página Home -->
+  <div class="page" id="homePage">
+    <div class="container" style="max-width: 900px;">
+      <div class="header">
+        <h2>Bem-vindo, <span id="userName"></span>!</h2>
+        <p>Gerencie seus veículos</p>
+      </div>
+
+      <div class="nav-buttons">
+        <button onclick="showPage('addVehiclePage')">➕ Adicionar Veículo</button>
+        <button class="btn-secondary" onclick="logout()">🚪 Sair</button>
+      </div>
+
+      <div class="vehicle-list" id="vehicleList">
+        <div class="empty-state">
+          <p>📋 Nenhum veículo cadastrado</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Página Adicionar/Editar Veículo -->
+  <div class="page" id="addVehiclePage">
+    <div class="container">
+      <h1 id="formTitle">Adicionar Veículo</h1>
+      <p class="subtitle">Preencha os dados do veículo</p>
+      
+      <div id="vehicleMessage"></div>
+      
+      <form id="vehicleForm">
+        <input type="hidden" id="vehicleId">
+        <div class="form-group">
+          <label>Marca:</label>
+          <input type="text" id="vehicleBrand" required>
+        </div>
+        <div class="form-group">
+          <label>Modelo:</label>
+          <input type="text" id="vehicleModel" required>
+        </div>
+        <div class="form-group">
+          <label>Ano:</label>
+          <input type="number" id="vehicleYear" required min="1900" max="2025">
+        </div>
+        <button type="submit">Salvar Veículo</button>
+        <button type="button" class="btn-secondary" onclick="showPage('homePage')">Cancelar</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let currentUser = null;
+    let users = [];
+    let vehicles = [];
+    let editingVehicleId = null;
+
+    // Carrega dados do localStorage
+    function loadData() {
+      const savedUsers = localStorage.getItem('users');
+      const savedVehicles = localStorage.getItem('vehicles');
+      
+      if (savedUsers) users = JSON.parse(savedUsers);
+      if (savedVehicles) vehicles = JSON.parse(savedVehicles);
+    }
+
+    // Salva dados no localStorage
+    function saveData() {
+      localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem('vehicles', JSON.stringify(vehicles));
+    }
+
+    // Mostra mensagem
+    function showMessage(elementId, message, type) {
+      const element = document.getElementById(elementId);
+      element.innerHTML = `<div class="message ${type}">${message}</div>`;
+      setTimeout(() => {
+        element.innerHTML = '';
+      }, 3000);
+    }
+
+    // Navega entre páginas
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      document.getElementById(pageId).classList.add('active');
+      
+      if (pageId === 'homePage') {
+        loadVehicles();
+      }
+      if (pageId === 'addVehiclePage') {
+        document.getElementById('vehicleForm').reset();
+        document.getElementById('formTitle').textContent = 'Adicionar Veículo';
+        editingVehicleId = null;
+      }
+    }
+
+    // Login
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      const user = users.find(u => u.email === email && u.password === password);
+      
+      if (user) {
+        currentUser = user;
+        document.getElementById('userName').textContent = user.name;
+        showMessage('loginMessage', 'Login realizado com sucesso!', 'success');
+        setTimeout(() => {
+          showPage('homePage');
+        }, 1000);
+      } else {
+        showMessage('loginMessage', 'Email ou senha incorretos!', 'error');
+      }
+    });
+
+    // Registro
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('registerName').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+      const confirmPassword = document.getElementById('registerConfirmPassword').value;
+      
+      if (password !== confirmPassword) {
+        showMessage('registerMessage', 'As senhas não coincidem!', 'error');
+        return;
+      }
+      
+      if (users.find(u => u.email === email)) {
+        showMessage('registerMessage', 'Este email já está cadastrado!', 'error');
+        return;
+      }
+      
+      users.push({ name, email, password });
+      saveData();
+      
+      showMessage('registerMessage', 'Conta criada com sucesso!', 'success');
+      setTimeout(() => {
+        showPage('loginPage');
+      }, 1500);
+    });
+
+    // Adicionar/Editar veículo
+    document.getElementById('vehicleForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const brand = document.getElementById('vehicleBrand').value;
+      const model = document.getElementById('vehicleModel').value;
+      const year = document.getElementById('vehicleYear').value;
+      
+      if (editingVehicleId !== null) {
+        const index = vehicles.findIndex(v => v.id === editingVehicleId);
+        vehicles[index] = { id: editingVehicleId, brand, model, year, userId: currentUser.email };
+        showMessage('vehicleMessage', 'Veículo atualizado com sucesso!', 'success');
+      } else {
+        const vehicle = {
+          id: Date.now(),
+          brand,
+          model,
+          year,
+          userId: currentUser.email
+        };
+        vehicles.push(vehicle);
+        showMessage('vehicleMessage', 'Veículo cadastrado com sucesso!', 'success');
+      }
+      
+      saveData();
+      setTimeout(() => {
+        showPage('homePage');
+      }, 1000);
+    });
+
+    // Carregar veículos
+    function loadVehicles() {
+      const userVehicles = vehicles.filter(v => v.userId === currentUser.email);
+      const listElement = document.getElementById('vehicleList');
+      
+      if (userVehicles.length === 0) {
+        listElement.innerHTML = '<div class="empty-state"><p>📋 Nenhum veículo cadastrado</p></div>';
+        return;
+      }
+      
+      listElement.innerHTML = userVehicles.map(vehicle => `
+        <div class="vehicle-item">
+          <div class="vehicle-info">
+            <h3>🚗 ${vehicle.brand} ${vehicle.model}</h3>
+            <p>Ano: ${vehicle.year}</p>
+          </div>
+          <div class="vehicle-actions">
+            <button class="btn-edit" onclick="editVehicle(${vehicle.id})">✏️ Editar</button>
+            <button class="btn-danger" onclick="deleteVehicle(${vehicle.id})">🗑️ Excluir</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Editar veículo
+    function editVehicle(id) {
+      const vehicle = vehicles.find(v => v.id === id);
+      if (vehicle) {
+        editingVehicleId = id;
+        document.getElementById('vehicleBrand').value = vehicle.brand;
+        document.getElementById('vehicleModel').value = vehicle.model;
+        document.getElementById('vehicleYear').value = vehicle.year;
+        document.getElementById('formTitle').textContent = 'Editar Veículo';
+        showPage('addVehiclePage');
+      }
+    }
+
+    // Deletar veículo
+    function deleteVehicle(id) {
+      if (confirm('Tem certeza que deseja excluir este veículo?')) {
+        vehicles = vehicles.filter(v => v.id !== id);
+        saveData();
+        loadVehicles();
+      }
+    }
+
+    // Logout
+    function logout() {
+      if (confirm('Deseja sair do sistema?')) {
+        currentUser = null;
+        showPage('loginPage');
+      }
+    }
+
+    // Inicializa
+    loadData();
+  </script>
+
+</body>
+</html>
